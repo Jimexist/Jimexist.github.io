@@ -2,7 +2,10 @@
 layout: post
 title:  "An Instagram Downloader"
 date: 2016-06-27T01:30:12+08:00
-categories: Instagram chrome extension
+categories: hacking
+tags:
+- Instagram
+- Chrome extension
 ---
 
 Recently I find myself often wanting to save great Instagram photos from others.
@@ -23,6 +26,6 @@ $('article img').each(function(i, img) {
 
 So it worked as expected when pasted into the Chrome DevTools: the site has shielding set up for the photos so you cannot just right click and save the photo, but you can always get those `src` attributes by jQuery-ing `img`s.
 
-So I went on and create [a content-script based Chrome extension](https://github.com/Jimexist/instagram-downloader), because this is a great way to evaluate a `js` code in the current tab's document as context. I did it in ES6 just to try things out, but to be honest that was an overkill. The extension uses [this great `fileSaver` package](https://github.com/eligrey/FileSaver.js/) that I've used before, and everything else is quite self-explanatory.
+So I went on and create [a content-script based Chrome extension](https://github.com/Jimexist/instagram-downloader), because this is a great way to evaluate `js` code in the current tab's document as context. I did it in ES6 just to try things out, but to be honest that was an overkill. The extension uses [this great `fileSaver` package](https://github.com/eligrey/FileSaver.js/) that I've used before, and everything else is quite self-explanatory.
 
 The extension only downloads a url list as a text file because I think [aria2c](https://aria2.github.io/) is a better tool for this step as it handles retries, url parsing, etc. nicely.
