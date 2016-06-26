@@ -4,8 +4,6 @@ title: About
 permalink: /about/
 ---
 
-## About me
-
 I'm a co-founder of a [tech](http://github.com/Madadata/) [start-up](http://www.madadata.com/) in Beijing, China. We are focusing on building data platforms and solving hard data problems for our clients.
 
 Personally I am a programmer and recently into functional programing - I've been learning Elixir and Haskell. I also use React for front-end code, Node/Java for back-end code, and Python for scripting.
