@@ -12,7 +12,7 @@ Recently I find myself often wanting to save great Instagram photos from others.
 
 Although mostly accessed via its app, Instagram does have a [website version](https://instagram.com). It's a good starting point. However it's quite troublesome to write a crawler as the website only lazy-loads the urls and images when you scroll down, and those image urls are initially loaded via JavaScript/JSON, not via HTML.
 
-Since the moment I realize I want to save certain photos, there are already there, rendered into HTML tags, so I did some digging:
+Since the moment I realize I want to save certain photos, they are already there, rendered into HTML tags, so I did some digging:
 
 ```js
 // Hoping this jQuery query does not break too often.
