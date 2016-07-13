@@ -410,7 +410,7 @@ So the comparison here is:
   - Hive: 81 seconds
   - Presto: 11 seconds
 
-The time-run data collected here is not comprehensive nor systematic, so please don't take them for series benchmarks. But they do give a hint about how much faster Presto can be compared to Hive.
+The time-run data collected here is not comprehensive nor systematic, so please don't take them for serious benchmarks. But they do give a hint about how much faster Presto can be compared to Hive.
 
 ## Conclusion
 
