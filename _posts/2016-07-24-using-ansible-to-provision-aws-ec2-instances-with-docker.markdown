@@ -75,6 +75,7 @@ Apart from `site.yml` I also created `provisions.yml` and `backends.yml` , the f
 
 The content of top-level `provisions.yml` is rather simple since most of the meat is in `roles` for possible reuse:
 
+{% raw %}
 ```yaml
 ---
 # provisions.yml
@@ -97,11 +98,13 @@ The content of top-level `provisions.yml` is rather simple since most of the mea
   roles:
     - docker
 ```
+{% endraw %}
 
-Note that there are two plays: the first one targets localhost because itself will create new EC2 instances, and the second one targets group `tag_class_{{ class }}` which needs more explanations later.
+Note that there are two plays: the first one targets localhost because itself will create new EC2 instances, and the second one targets group {% raw %}`tag_class_{{ class }}`{% endraw %} which needs more explanations later.
 
 Let’s take a look at the launch task which is used by first play:
 
+{% raw %}
 ```yaml
 ---
 # roles/launch/tasks/main.yml
@@ -138,6 +141,7 @@ Let’s take a look at the launch task which is used by first play:
     state: started
   with_items: "{{ ec2.instances }}"
 ```
+{% endraw %}
 
 it uses ansible’s ec2 module to create instances using a set of variables. Basically you can tweak a lot of things here:
 
@@ -176,6 +180,7 @@ After the instances are created and added to groups, the task will wait for thei
 
 The second step is to install and start docker daemon on each machine:
 
+{% raw %}
 ```yaml
 ---
 # roles/docker/tasks/main.yml
@@ -203,6 +208,7 @@ The second step is to install and start docker daemon on each machine:
   with_items:
     - docker-py
 ```
+{% endraw %}
 
 Amazon’s Linux AMI comes with yum (and a fast intranet source list). You might want to use `apt` if you are using ubuntu or debian. Docker officially provided https://get.docker.com script for installation like `curl https://get.docker.com | sh` , but since you already know what’s inside there, you might just use  `yum` .
 
@@ -215,6 +221,7 @@ With this done, you are all set! Go and run `provisions.yml` playbook and you’
 
 To showcase how you can then run docker containers, see below:
 
+{% raw %}
 ```yaml
 ---
 # roles/dataserver/tasks/main.yml
@@ -254,6 +261,7 @@ To showcase how you can then run docker containers, see below:
 
 # more goes on
 ```
+{% endraw %}
 
 You can pretty much use ansible to do many cool things with docker, like login to dockerhub and pull private images, telling docker containers to log to a specific CloudWatch log stream, and create docker containers to talk to each others within different network interfaces. For more detailed information you can see [the docs](http://docs.ansible.com/ansible/docker_container_module.html). Once you have these credentials stored as group_var files, you can use [ansible-vault](http://docs.ansible.com/ansible/playbooks_vault.html) to encrypt them so that you don’t have to store passwords in cleartext in git.
 
@@ -282,6 +290,7 @@ docker_volume_group: docker_vol
 
 and then in `roles/docker/tasks/main.yml` to include these additional steps after installing docker and before starting the docker daemon:
 
+{% raw %}
 ```yaml
 - name: Create the volume group for docker volume
   shell: vgcreate "{{ docker_volume_group }}" "{{ volumes[0].device_name }}"
@@ -305,6 +314,7 @@ and then in `roles/docker/tasks/main.yml` to include these additional steps afte
 - name: Run docker-storage-setup
   shell: docker-storage-setup
 ```
+{% endraw %}
 
 The script will create and update the logical volume on the block device and write configuration to `/etc/sysconfig/docker-storage`  so that docker daemon can pick up the new config.
 
