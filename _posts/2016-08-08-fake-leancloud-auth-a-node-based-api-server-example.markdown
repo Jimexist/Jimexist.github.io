@@ -1,6 +1,6 @@
 ---
 layout: post
-title:  "Fake Leancloud Auth：一个基于 node.js 的 API 服务例程"
+title:  "Fake Leancloud Auth：一个基于 node.js 的 API 服务器例程"
 categories: tutorial
 tags:
 - Node.js
@@ -102,7 +102,7 @@ passport 的一些配置随后也加入到了 APP 中。其中值得注意的是
 
 这个项目的部署使用了 docker，因为我们的测试环境 CircleCI 对 docker 的支持较好。如果你对 docker 还不是很了解，可以查看docker 的文档，这里不再赘述。
 
-[Dockerfile](https://github.com/Jimexist/fake-leancloud-auth/blob/0.2.1/Dockerfile#L5) 的书写相对比较简单，这里唯一需要注意的是为了充分利用 docker 的 layer 缓存，先把 `package.json` 和 `npm-shrinkwrap.json` 复制到目标文件夹，这样在没有修改这两个文件的时候，docker 不会重新调用 `npm install` ，极大的节省了打包时间。`npm-shrinkwrap.json` 是一个把目前安装的库的准确版本进行固定的工具，可以用 `npm shrinkwrap` 命令生成（类似于 `pip freeeze` 在 Python 中的用法），这样可以进一步减少因为依赖突然改变带来的问题。
+[Dockerfile](https://github.com/Jimexist/fake-leancloud-auth/blob/0.2.1/Dockerfile#L5) 的书写相对比较简单，这里唯一需要注意的是为了充分利用 docker 的 layer 缓存，先把 `package.json` 和 `npm-shrinkwrap.json` 复制到目标文件夹，这样在没有修改这两个文件的时候，docker 不会重新调用 `npm install` ，极大的节省了打包时间。`npm-shrinkwrap.json` 是一个把目前安装的库的准确版本进行固定的工具，可以用 `npm shrinkwrap` 命令生成（类似于 `pip freeze` 在 Python 中的用法），这样可以进一步减少因为依赖突然改变带来的问题。
 
 打包好的 docker 镜像使用起来也比较简单，只需要和 MongoDB 的容器相连，并且提供相应的环境变量就可以了。如果你不想使用 docker，可以考虑 [pm2](https://www.npmjs.com/package/pm2)。
 
