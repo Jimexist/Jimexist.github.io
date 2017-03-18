@@ -23,7 +23,7 @@ The screenshot above for running [mocha](https://mochajs.org/) test locally reve
 
 From the screenshot I can tell that not all APIs are slow: the one where users log out and also the one showing current profile is reasonably fast. Also, judging from the dev logs that I printed out using [morgan](https://www.npmjs.com/package/morgan), for the slow APIs, their response time collected by Express is indeed showing a consistent level of slowness, (i.e. for the red flagged ones, you are seeing a roughly sum of latency of two requests above them, respectively).
 
-This actually rules out the possibility that the slowness comes from *connection*, rather than within Express. So my next step is to look at my Express app. (N.B. this is actually something worth ruling out first, and I personally suggest trying at one or two other tools rather than `mocha`, e.g. `curl` and even `nc` before moving on, because they almost always prove to be more reliable than the test code you wrote).
+This actually rules out the possibility that the slowness comes from *connection*, rather than within Express. So my next step is to look at my Express app. (N.B. this is actually something worth ruling out first, and I personally suggest trying one or two other tools rather than `mocha`, e.g. `curl` and even `nc` before moving on, because they almost always prove to be more reliable than the test code you wrote).
 
 ## Inside Express
 
@@ -146,9 +146,7 @@ Turning my focus away from Mongoose itself, I start to look at the passport plug
 
 The name is a big long but it basically tells what it does. It adapts Mongoose as a local strategy for [passport](https://github.com/jaredhanson/passport), which does session management and registering and login boilerplate.
 
-The library is fairly small and simple, so I start to directly edit the `index.js` file within my `node_modules/` folder. Since function `#register(user, password, cb)` calls function `#setPassword(password, cb)`, i.e. specifically [this line](https://github.com/saintedlama/passport-local-mongoose/blob/0b5da93def0244a551188263bf473d48f3b95876/index.js#L86).
-
-After adding some more `console.time` and `console.timeEnd` I confirmed that the latency is mostly due to this function call:
+The library is fairly small and simple, so I start to directly edit the `index.js` file within my `node_modules/` folder. Since function `#register(user, password, cb)` calls function `#setPassword(password, cb)`, i.e. specifically [this line](https://github.com/saintedlama/passport-local-mongoose/blob/0b5da93def0244a551188263bf473d48f3b95876/index.js#L86), I started to focus on the latter. After adding some more `console.time` and `console.timeEnd` I confirmed that the latency is mostly due to this function call:
 
 ```js
 pbkdf2(password, salt, function(pbkdf2Err, hashRaw) {
@@ -168,7 +166,7 @@ After reducing the iterations to `1,000`, my mocha test output now looks like:
 
 ![iter-1000](/assets/2017/03/iter-1000.png)
 
-and finally it is much acceptable in terms of latency and security, for a test application after all!
+and finally it is much acceptable in terms of latency and security, for a test application after all! N.B. I did this change for my testing app, it does not mean your production app should decrease the iterations. Also, setting it too high will also render the app vulnerable to DoS attack.
 
 ## Final thoughts
 
